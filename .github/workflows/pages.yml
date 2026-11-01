@@ -1,0 +1,36 @@
+name: Deploy CoWorkOS website
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: false
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Download account-owned static bundle
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download release-20261101-migration --repo "${{ github.repository }}" --pattern "assets.zip.part-*" --dir bundle
+          cat bundle/assets.zip.part-* > bundle/assets.zip
+          mkdir _site
+          unzip -q bundle/assets.zip -d _site
+      - name: Exclude local upload tooling
+        run: rm -f _site/media-import.html
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
