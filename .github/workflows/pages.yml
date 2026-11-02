@@ -25,14 +25,13 @@ jobs:
           cat bundle/assets.zip.part-* > bundle/assets.zip
           mkdir _site
           unzip -q bundle/assets.zip -d _site
-      - name: Add web-optimized full demo
+      - name: Add compact full demo
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           mkdir -p _site/videos
-          gh release download promo-v23-web-20261102 --repo "${{ github.repository }}" --pattern "web-v23.mp4.part-*" --dir promo
-          cat promo/web-v23.mp4.part-* > _site/videos/CoworkOS-v23-Web-1080p.mp4
-          echo "9a5017db0cdfb84d3e03d38105fe45d63e19821580fdaac15d0c6afd59a44090  _site/videos/CoworkOS-v23-Web-1080p.mp4" | sha256sum -c -
+          gh release download promo-v23-lite-20261102 --repo "${{ github.repository }}" --pattern "CoworkOS-v23-Web-720p.mp4" --dir _site/videos
+          echo "0e29efeb8c029e6412928a693598a30941520534e5fa9d942279c3905e9f144e  _site/videos/CoworkOS-v23-Web-720p.mp4" | sha256sum -c -
       - name: Exclude local upload tooling
         run: rm -f _site/media-import.html
       - uses: actions/configure-pages@v5
