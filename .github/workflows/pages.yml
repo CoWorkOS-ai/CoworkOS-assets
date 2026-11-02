@@ -25,6 +25,12 @@ jobs:
           cat bundle/assets.zip.part-* > bundle/assets.zip
           mkdir _site
           unzip -q bundle/assets.zip -d _site
+      - name: Add original 4K full demo
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p _site/videos
+          gh release download promo-v23-20261102 --repo "${{ github.repository }}" --pattern "CoworkOS-v23-4K-Viewing.mp4" --dir _site/videos
       - name: Exclude local upload tooling
         run: rm -f _site/media-import.html
       - uses: actions/configure-pages@v5
