@@ -30,7 +30,9 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           mkdir -p _site/videos
-          gh release download promo-v23-20261102 --repo "${{ github.repository }}" --pattern "CoworkOS-v23-4K-Viewing.mp4" --dir _site/videos
+          gh release download promo-v23-20261102 --repo "${{ github.repository }}" --pattern "v23.mp4.part-*" --dir promo
+          cat promo/v23.mp4.part-* > _site/videos/CoworkOS-v23-4K-Viewing.mp4
+          echo "3eabe59579cd06e6b538a92519c34523ec1281a3058fbb603a16bd73dd6504bc  _site/videos/CoworkOS-v23-4K-Viewing.mp4" | sha256sum -c -
       - name: Exclude local upload tooling
         run: rm -f _site/media-import.html
       - uses: actions/configure-pages@v5
